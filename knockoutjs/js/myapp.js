@@ -54,7 +54,6 @@ var MyApp = (function ($) {
         this.title = ko.observable(title);
         this.completed = ko.observable(completed);
         this.editing = ko.observable(false);
-        this.valid = ko.observable(true);
     };
 
     // our main view model
@@ -108,7 +107,7 @@ var MyApp = (function ($) {
                 validationErrorHandler('title cannot contain a p!');
                 return false;
             }
-                
+            return true;
         };
         
         // remove a single todo
@@ -130,9 +129,6 @@ var MyApp = (function ($) {
 
         // stop editing an item.  Remove the item, if it is now empty
         self.stopEditing = function (item) {
-            if (!item.editing()) {
-                return;
-            }
             var title = item.title().trim();
             if (!title) {
                 self.remove(item);
@@ -140,7 +136,7 @@ var MyApp = (function ($) {
             if (self.validateTitle(title)) {
                 item.editing(false);
             } else {
-                item.valid(false);
+                item.editing(true);
             }
             
         };
