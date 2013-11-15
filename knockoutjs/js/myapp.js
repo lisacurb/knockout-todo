@@ -54,15 +54,42 @@ var MyApp = (function ($) {
         this.title = ko.observable(title);
         this.completed = ko.observable(completed);
         this.editing = ko.observable(false);
+        this.valid = ko.observable(true);
     };
 
     // our main view model
     var ViewModel = function (todos) {
         var self = this;
 
+        self.onTodoValidationChange = function(valid) {
+            if (!valid) {
+                this.editing(true);
+            } 
+        };
+        
+        self.onTodoTitleChange = function(title) {
+            if (title.indexOf('x') >= 0) {
+                $.each(self.todos(), function(i, todo) {
+                    var myTitle = todo.title();
+                    // If a task contains an x in it's label, all y's in all tasks are changed to z's
+                    todo.title(myTitle.replace('y', 'z'));
+                    // If a task contains a z in it's label, all 2s and 5s in all tasks are changed to a's
+                    todo.title(myTitle.replace(/[25]/g, 'a'));
+                });
+            }
+        };
+        
+        self.createNewTodo = function(title, completed) {
+            var newTodo = new Todo(title, completed);
+            newTodo.valid.extend({ notify: 'always' });
+            newTodo.valid.subscribe(self.onTodoValidationChange, newTodo);
+            newTodo.title.subscribe(self.onTodoTitleChange);
+            return newTodo;
+        };
+        
         // map array of passed in todos to an observableArray of Todo objects
         self.todos = ko.observableArray(ko.utils.arrayMap(todos, function (todo) {
-            return new Todo(todo.title, todo.completed);
+            return self.createNewTodo(todo.title, todo.completed);
         }));
 
         // store the new todo value being entered
@@ -90,18 +117,12 @@ var MyApp = (function ($) {
             var current = self.current().trim();
             if (current) {
                 if (self.validateTitle(current)) {
-                    self.todos.push(new Todo(current));
+                    self.todos.push(self.createNewTodo(current));
                     self.current('');
-//                    self.processTitleChange(current);
                 }
             }
         };
-
-//        self.processTitleChange(title) {
-//            if (title.indexOf('x') >= 0) {
-//                self.changeYsToZs();
-//            }
-//        }
+        
         self.validateTitle = function(title) {
             if (title.indexOf('p') >= 0) {
                 validationErrorHandler('title cannot contain a p!');
@@ -134,9 +155,10 @@ var MyApp = (function ($) {
                 self.remove(item);
             }
             if (self.validateTitle(title)) {
+                item.valid(true);
                 item.editing(false);
             } else {
-                item.editing(true);
+                item.valid(false);
             }
             
         };
