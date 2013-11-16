@@ -214,7 +214,7 @@ var MyApp = (function ($) {
             validationErrorHandler = params['validationErrorHandler'];
         }
         $('#' + params['attachPoint'])
-            .attr('data-bind', "template: {name: 'myTemplate'}");
+            .attr('data-bind', "template: {name: 'templates/myapp.tmpl'}");
         // check local storage for todos
         var todos = ko.utils.parseJson(localStorage.getItem('todos-knockoutjs'));
 
