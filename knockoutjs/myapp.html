@@ -7,8 +7,7 @@
         <script type="text/javascript" src="lib/jquery/jquery-1.6.4.min.js"></script>
         <link rel="stylesheet" href="bower_components/todomvc-common/base.css">
         <style>
-            #appContainer,
-            #errorMessage {
+            #appContainer {
                 position: fixed;
                 top: 50%;
                 left: 50%;
@@ -34,7 +33,12 @@
              }
              
              #errorMessage {
+                margin-top:30px;
+                left: 50%;
+                text-align: center;
                 color: red;
+                height: 25px;
+                font-size: 20px;
              }            
         </style>
     </head>
@@ -52,13 +56,9 @@
         <script type="text/javascript" src="js/myapp.js"></script>
         <script type="text/javascript">
             function customError(message) {
-                $('#attachHere').hide();
                 $('#errorMessage')
-                    .text(message)
-                    .show();
+                    .text(message);
                 setTimeout(function() {
-                    $('#errorMessage').hide();
-                    $('#attachHere').show();
                     $('#errorMessage').empty();
                 }, 2000);
             } 
