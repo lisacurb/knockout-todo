@@ -48,3 +48,15 @@
         <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
     </footer>
 </script>
+
+<script id="todo" type="text/html">
+    <li data-bind="css: { completed: completed, editing: editing }">
+        <div class="view">
+            <input class="toggle" data-bind="checked: completed" type="checkbox">
+            <label data-bind="text: title, event: { dblclick: $root.editItem }"></label>
+            <button class="destroy" data-bind="click: $root.remove"></button>
+        </div>
+        <input class="edit" data-bind="value: title, valueUpdate: 'afterkeydown', enterKey: $root.stopEditing, selectAndFocus: editing, event: { blur: $root.stopEditing }">
+    </li>
+</script>
+    
