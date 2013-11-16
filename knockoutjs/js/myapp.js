@@ -2,6 +2,16 @@
 var MyApp = (function ($) {
     'use strict';
 
+    var templatesLoaded = false;
+    
+    // TODO support individual templates for development mode.
+    var loadTemplates = function() {
+        $.get("templates/myappAll.tmpl.html", function(templates) {
+            $("body").append(templates);
+            templatesLoaded = true;
+        });
+    };
+    
     var ENTER_KEY = 13;
     
     var validationErrorHandler = function(error) {
@@ -214,15 +224,21 @@ var MyApp = (function ($) {
             validationErrorHandler = params['validationErrorHandler'];
         }
         $(params['attachPoint'])
-            .attr('data-bind', "template: {name: 'templates/myapp.tmpl'}");
+            .attr('data-bind', "template: {name: 'myapp'}");
         // check local storage for todos
         var todos = ko.utils.parseJson(localStorage.getItem('todos-knockoutjs'));
 
         // bind a new instance of our view model to the page
         var viewModel = new ViewModel(todos || []);
-        ko.applyBindings(viewModel);
+        if (templatesLoaded) {
+            ko.applyBindings(viewModel);
+        } else {
+            // TODO wait for templates to load
+        }
     };
 
+    loadTemplates();
+    
     return {
         init: init
     };
