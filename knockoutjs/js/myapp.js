@@ -213,7 +213,7 @@ var MyApp = (function ($) {
         if (typeof params['validationErrorHandler'] == 'function') {
             validationErrorHandler = params['validationErrorHandler'];
         }
-        $('#' + params['attachPoint'])
+        $(params['attachPoint'])
             .attr('data-bind', "template: {name: 'templates/myapp.tmpl'}");
         // check local storage for todos
         var todos = ko.utils.parseJson(localStorage.getItem('todos-knockoutjs'));
@@ -221,10 +221,6 @@ var MyApp = (function ($) {
         // bind a new instance of our view model to the page
         var viewModel = new ViewModel(todos || []);
         ko.applyBindings(viewModel);
-
-        // set up filter routing
-        /*jshint newcap:false */
-        Router({'/:filter': viewModel.showMode}).init();
     };
 
     return {
